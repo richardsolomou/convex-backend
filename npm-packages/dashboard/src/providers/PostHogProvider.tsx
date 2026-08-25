@@ -3,6 +3,7 @@ import React, { useEffect } from "react";
 import posthog from "posthog-js";
 import { PostHogProvider as PHProvider } from "posthog-js/react";
 import { useProfile } from "api/profile";
+import { dropBrowserExtensionExceptions } from "lib/posthogBeforeSend";
 
 export function PostHogProvider({
   children,
@@ -33,6 +34,8 @@ export function PostHogProvider({
       debug: isDebugMode,
       // Since we're using the pages router, this captures the initial pageview.
       capture_pageview: true,
+      // Drop non-Error exceptions injected by "Safe Links" browser add-ins.
+      before_send: dropBrowserExtensionExceptions,
       session_recording: {
         recordHeaders: false,
         maskTextSelector: "*", // Masks all text elements (not including inputs)
